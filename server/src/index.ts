@@ -20,7 +20,7 @@ async function startServer() {
         // console.log(encrypted);
         // console.log(decrypted);
 
-        // await connectToDatabase();
+        await connectToDatabase();
 
         app.use("/user", userRouter);
 
