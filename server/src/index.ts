@@ -1,28 +1,37 @@
-import express, { Request, Response } from 'express';
-import { connect } from './database/db.js';
-import dotenv from 'dotenv';
-
-const app = express();
-
-
-
+import express, { json } from "express";
+import dotenv from "dotenv";
+import { encryptData, decryptData } from "./utils/index";
+import { connectToDatabase } from "./database/db";
+import { userRouter } from "./routes/user";
+import cors from 'cors';
 async function startServer() {
     try {
 
-        const connection = await connect();
+        dotenv.config();
+        const PORT = process.env.PORT ?? 3030;
+        const app = express();
 
-        console.log("database connection successfull");
+        app.use(express.json());
+        app.use(cors());
 
-        app.listen(3000, () => {
-            console.log("server running on port 3000");
-        });
+        // const encrypted: string = encryptData("jay");
+        // const decrypted: string = decryptData(encrypted);
+
+        // console.log(encrypted);
+        // console.log(decrypted);
+
+        // await connectToDatabase();
+
+        app.use("/user", userRouter);
+
+        app.listen(PORT, () => {
+            console.log(`server is running on port ${PORT}`);
+        })
 
     } catch (error) {
-        console.log("error!!!")
+        console.log(error);
     }
-
-
 }
 
-startServer();
 
+startServer();

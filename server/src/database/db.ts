@@ -1,12 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from 'dotenv';
 
 
-function connect() {
-    return mongoose.connect('mongodb://localhost:27017/');
-}
-
-
-
-export {
-    connect,
+dotenv.config();
+export function connectToDatabase() {
+    const MONGO_URL = process.env.MONGO_URL;
+    return mongoose.connect(MONGO_URL);
 }
