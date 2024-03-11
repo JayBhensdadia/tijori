@@ -8,7 +8,8 @@ export const userMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     try {
 
-        const token = req.headers.authorization;
+        const token = req.cookies["token"];
+        console.log(token);
         const verified = jwt.verify(token, "SECRET");
         next();
 
