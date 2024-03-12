@@ -1,7 +1,10 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Button, Checkbox, Label, TextInput, Toast } from 'flowbite-react';
+import { Button, Checkbox, DarkThemeToggle, Label, TextInput, Toast } from 'flowbite-react';
 import { loginUser } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
+import cn from 'classnames';
+import Header from '../components/Header';
+import FooterComp from '../components/Footer';
 
 
 function Login() {
@@ -9,6 +12,7 @@ function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const handleEmailChange: (e: ChangeEvent<HTMLInputElement>) => void = (e) => {
@@ -25,16 +29,25 @@ function Login() {
 
     const handlFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
 
         const { msg } = await loginUser({ email, password });
-        navigate("/home");
+
+        setTimeout(() => {
+            setIsLoading(false);
+            navigate("/home");
+
+        }, 3000);
     }
 
 
     return (
-        <div className='w-full h-screen flex justify-center items-center'>
+        <div className='w-full h-screen flex flex-col justify-between items-center dark:bg-slate-800'>
 
-            <form onSubmit={handlFormSubmit} className="flex max-w-md flex-col gap-4 p-5 min-w-[400px] border-2 rounded-lg">
+            <Header />
+
+
+            <form onSubmit={handlFormSubmit} className="flex max-w-md flex-col gap-4 p-5 sm:min-w-[400px] border-2 border-slate-400 rounded-lg">
                 <p className='text-3xl text-slate-500 font-semibold'>Login</p>
                 <div>
                     <div className="mb-2 block">
@@ -48,10 +61,16 @@ function Login() {
                     </div>
                     <TextInput onChange={handlePasswordChange} id="password1" type="password" required />
                 </div>
-                <Button type="submit">Submit</Button>
+                <Button className={cn({
+                    'hidden': isLoading
+                })} type="submit">Submit</Button>
+                <Button className={cn({
+                    'hidden': !isLoading,
+                })} isProcessing>Loggin in...</Button>
             </form>
 
 
+            <FooterComp />
         </div>
     )
 }
